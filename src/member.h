@@ -24,13 +24,14 @@ class MemberConnection {
   Member *dst;
 
   double GetWeight() const {
-    return group->members.size() + 1;
+   return group->members.size() + 1;
   }
 };
 
 class Member {
   // Add extra private fields and private methods if necessary.
-
+  Member * DLS(Member * node, int depth,uint64_t dst_member_id);
+  
  public:
   uint64_t member_id;
   float lat;

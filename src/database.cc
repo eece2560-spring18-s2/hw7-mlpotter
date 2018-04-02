@@ -186,6 +186,7 @@ void Database::LoadData(const std::string &data_folder_path,
                         int event_limit, 
                         int member_limit, 
                         int group_limit) {
+
   LoadEventData(data_folder_path + "/events.csv", event_limit);
   LoadMemberData(data_folder_path + "/members.csv", member_limit);
   LoadGroupData(data_folder_path + "/groups.csv", group_limit);
@@ -196,10 +197,92 @@ void Database::LoadData(const std::string &data_folder_path,
 
 void Database::BuildMemberGraph() {
   // Fill in your code here
+ unsigned int i; 
+ unsigned int j;
+ unsigned int k;
+ unsigned int l;
+  for(i = 0; i < (members.size()-1); i++){
+    for(j = i+1; j < members.size(); j++){
+       for(k = 0; k < members[i]->groups.size(); k++){
+         for(l = 0; l < members[j]->groups.size(); l++){
+           if(members[i]->groups[k]->group_id == members[j]->groups[l]->group_id){
+             //std::cout << "Connection: " << "(" << members[i]->member_id << ", " << members[j]->member_id << ", " << members[i]->groups[k]->group_id <<")" << "\n";
+             MemberConnection connect;
+             auto fill = members[i]->groups[k];
+             connect.dst = members[j];
+             connect.group = fill;
+             members[i]->connecting_members[members[j]->member_id] = connect;
+             connect.dst = members[i];
+             members[j]->connecting_members[members[i]->member_id] = connect;
+             break;
+           }
+        }
+        if(l == members[j]->groups.size()){
+          l = l-1;
+        }
+        if(members[i]->groups[k]->group_id == members[j]->groups[l]->group_id){
+          break;
+        }
+      }
+    }
+  }
 }
+
+/*
+class myComparator
+{
+  public:
+    double operator()(const Member* p1, const Member* p2){
+      std::cout << "Comparator called" << "\n";
+      return p1->key > p2->key;
+    }
+};
+*/
 
 double Database::BestGroupsToJoin(Member *root) {
   // Fill in your code here
+  for (unsigned int i = 0; i < members.size(); i++){
+    members[i]->key = std::numeric_limits<int>::max()/2;
+    members[i]->parent = NULL;
+    members[i]->color = COLOR_WHITE;
+  }
+  root->key = 0;
+  //std::priority_queue<Member *, std::vector<Member * >,myComparator > Q;
+  std::vector<Member *> Q;
+  
+  for(unsigned int i = 0; i < members.size(); i++){
+    Q.push_back(members[i]);
+  }
+  
+  Member * u;
+  unsigned int i;
+  int j;
+  while(!Q.empty()){
+    int min = std::numeric_limits<int>::max();
+    for(i = 0; i < Q.size(); i++){
+      if(min > Q[i]->key){
+        min = Q[i]->key;
+        u=Q[i];
+        j = i;
+      }
+    }
+    Q.erase(Q.begin()+j);
+    u->color = COLOR_BLACK;
+    for (auto it = u->connecting_members.begin(); it != u->connecting_members.end(); ++it ){
+        Member * v = it->second.dst;
+        if((v->color != COLOR_BLACK) && it->second.GetWeight() < v->key){
+          v->parent = u;
+          v->key = it->second.GetWeight();
+        }
+    }
+  }
+  
+  double sum = 0;
+  for(unsigned int i = 0; i < members.size(); i++){
+    sum = sum + members[i]->key;
+  }
+  
+  return sum;
 }
 
 }
