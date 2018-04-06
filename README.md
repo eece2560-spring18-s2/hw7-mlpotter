@@ -1,19 +1,21 @@
 # hw7-mlpotter
 hw7-mlpotter created by GitHub Classroom
-1.
+<br /> 
+##1.
 O(M^2 * L^2)
 
 Iterate through all members and compare each of the members groups to each other. If the members share a group_id then create a bidirectional edge between the two members and break from the loop which compares group_ids since only 1 edge may exist between two members.
 
 Time to build member graph 6.31789
 
-2.
+##2.
 
-Time to find path to member 0.0098209
-Time to find path to member 0.0110455
-Time to find path to member 0.0120101
+<br /> Time to find path to member 0.0098209
+<br /> Time to find path to member 0.0110455
+<br /> Time to find path to member 0.0120101
 
-3. //commented out
+##3. 
+<br />//commented out
 	p2. 
 Command being timed: "./p2_main"
         User time (seconds): 5.04
@@ -123,7 +125,7 @@ IDDFS mimics the memory usage of DFS while obtaining the optimal solution by sea
 BFS space complexity is O(|V|) compared to DFS space complexity of O(h) , where h is the maximal depth of the tree. 
 IDDFS has the same space complexity as DFS.
 
-4.
+## 4.
 Scott Heiferman <- Pat Finegan <- djouffyo <- marian <- Denise Yap <- janezeng <- kirstin_leifels <- vjm89 <- hhpierce <- Matt Meeker
 
 Time to generate MST 0.608689
